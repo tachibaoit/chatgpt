@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Sinh Test Case</title>
+</head>
+<body>
+    <h2>Đăng Nhập</h2>
+    <form id="loginForm">
+        <label for="username">Tên đăng nhập:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Mật khẩu:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="button" onclick="generateTestCases()">Sinh Test Case</button>
+    </form>
+
+    <h3>Các trường hợp thử nghiệm cho đăng nhập:</h3>
+    <ul id="testCaseList"></ul>
+
+    <script>
+        async function generateTestCases() {
+            // Nội dung câu lệnh gọi API sinh test case
+            const prompt = "sinh test case cho trường hợp đăng nhập";
+            
+            // Thực hiện gọi API ChatGPT để sinh test case (API của OpenAI cần key)
+            const response = await fetch('https://api.openai.com/v1/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer sk-XyXAK3hfxpCJFEXDbN70eBVCFbReHsV3gtOjCir8BLT3BlbkFJI7cudLtw5XKv-nHEEgPtYeDUdb9edLpH_3IfFHb_IA'  // Thay bằng API Key của bạn
+                },
+                body: JSON.stringify({
+                    model: "text-davinci-003",
+                    prompt: prompt,
+                    max_tokens: 150
+                })
+            });
+
+            const data = await response.json();
+            const testCases = data.choices[0].text.trim().split("\n");
+
+            // Hiển thị test cases bên dưới form đăng nhập
+            const testCaseList = document.getElementById('testCaseList');
+            testCaseList.innerHTML = '';  // Xóa nội dung cũ
+            testCases.forEach((testCase, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Case ${index + 1}: ${testCase}`;
+                testCaseList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
